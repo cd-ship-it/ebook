@@ -6,6 +6,6 @@ layout: video
 youtubeId: "dQw4w9WgXcQ"
 ---
 
-Placeholder video — swap `youtubeId` in `src/content/pages/page-6.md` for your own ministry footage.
+We're grateful for every moment caught on camera — each one is a small piece of evidence of what gratitude and generosity can build together.
 
-A one- or two-sentence caption about the video usually goes here: who's in it, where it was filmed, and what the viewer is about to see.
+*Placeholder video — swap `youtubeId` in `src/content/pages/page-6.md` for your own ministry footage, along with a caption for who's in it and where it was filmed.*

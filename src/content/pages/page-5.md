@@ -6,13 +6,13 @@ layout: video
 youtubeId: "ltha25pOgxg"
 ---
 
-Placeholder caption: a sentence or two about what this video shows — a day in the program, a testimony, or a facility tour.
+We're thankful for every chance to show, not just tell — this short clip is a small window into a day we get to be part of.
 
-Four ways we care for every child:
+Four ways we get to give thanks in action, every single day:
 
-- **Shelter** — a safe home for children with nowhere else to go
+- **Shelter** — a safe home for children who have nowhere else to go
 - **Education** — tutoring, school fees, and uniforms so no child falls behind
-- **Nutrition** — two hot meals a day, every day
-- **Healthcare** — regular checkups and a nurse on call
+- **Nutrition** — two hot meals a day, every day, without fail
+- **Healthcare** — regular checkups and a nurse always on call
 
-Edit this list, the caption, or the `youtubeId` directly in `src/content/pages/page-5.md` — no design changes needed.
+*Edit this list, the caption, or the `youtubeId` directly in `src/content/pages/page-5.md` — no design changes needed.*

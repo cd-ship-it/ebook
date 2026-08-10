@@ -1,5 +1,5 @@
 ---
-order: 8
+order: 9
 title: "Thank You"
 subtitle: "Stay in touch with us"
 layout: closing
@@ -16,6 +16,8 @@ externalLinks:
     url: "mailto:hello@example.org"
 ---
 
-Thank you for reading the story of 豐榮渡風雨. Every page of this book — every word, photo, and link — came from a set of plain Markdown files, ready for you to edit into your own ministry's story.
+From all of us — the children, the staff, and every family who calls this community home — thank you. Truly, thank you for taking the time to read our story.
 
-*This is the last page. Use "Restart" below to return to the cover.*
+We give thanks for you, for your time, and for whatever small or great way you choose to walk with us from here.
+
+*This is the last page — use "Restart" below to return to the cover.*

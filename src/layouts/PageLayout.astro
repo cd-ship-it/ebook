@@ -13,17 +13,18 @@ interface LinkItem {
 interface Props {
   title: string;
   subtitle?: string;
-  layout: 'cover' | 'content' | 'fullImage' | 'video' | 'closing';
+  layout: 'cover' | 'content' | 'fullImage' | 'video' | 'closing' | 'article';
   backgroundImage?: string;
   heroImage?: string;
   imageAlt?: string;
   youtubeId?: string;
+  summary?: string;
   externalLink?: LinkItem;
   externalLinks?: LinkItem[];
   order: number;
 }
 
-const TOTAL_PAGES = 8;
+const TOTAL_PAGES = 9;
 
 const {
   title,
@@ -33,6 +34,7 @@ const {
   heroImage,
   imageAlt,
   youtubeId,
+  summary,
   externalLink,
   externalLinks,
   order,
@@ -98,7 +100,7 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
         </header>
 
         <div class="page-body">
-          {!isFullBleed && heroImage && (
+          {heroImage && (
             <img
               class="hero-image"
               src={heroImage}
@@ -110,9 +112,29 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
 
           {layout === 'video' && youtubeId && <YouTubeEmbed id={youtubeId} title={title} />}
 
-          <div class="prose">
-            <slot />
-          </div>
+          {layout === 'article' ? (
+            <>
+              {summary && <p class="summary-text">{summary}</p>}
+              <button
+                type="button"
+                class="read-more-btn"
+                data-read-more
+                aria-expanded="false"
+                aria-controls={`article-collapse-${order}`}
+              >
+                Read more ↓
+              </button>
+              <div class="reveal-collapse" id={`article-collapse-${order}`}>
+                <div class="reveal-inner prose">
+                  <slot />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div class="prose">
+              <slot />
+            </div>
+          )}
 
           {externalLink && (
             <div class="link-row">
@@ -176,8 +198,25 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
         );
       }
 
+      function setupReadMore() {
+        document.querySelectorAll('[data-read-more]').forEach((btn) => {
+          if (!(btn instanceof HTMLElement)) return;
+          btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('aria-controls');
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (!target) return;
+
+            const expanded = target.classList.toggle('is-expanded');
+            btn.setAttribute('aria-expanded', String(expanded));
+            btn.textContent = expanded ? 'Read less ↑' : 'Read more ↓';
+          });
+        });
+      }
+
       setupSwipeNav();
+      setupReadMore();
       document.addEventListener('astro:page-load', setupSwipeNav);
+      document.addEventListener('astro:page-load', setupReadMore);
     </script>
   </body>
 </html>

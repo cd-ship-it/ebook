@@ -315,6 +315,58 @@ body.layout-video .subtitle {
   border: 0;
 }
 
+/* ---------- article: summary + read-more reveal ---------- */
+
+.summary-text {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.read-more-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1.15rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.read-more-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.reveal-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-collapse.is-expanded {
+  grid-template-rows: 1fr;
+}
+
+.reveal-inner {
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.4s ease 0.05s, transform 0.4s ease 0.05s;
+}
+
+.reveal-collapse.is-expanded .reveal-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ---------- links / buttons ---------- */
 
 .link-row {
@@ -390,7 +442,11 @@ body.layout-closing .nav-btn.is-disabled {
   white-space: nowrap;
 }
 
-/* ---------- fade page-turn transition ---------- */
+/* ---------- 3D page-flip transition ---------- */
+
+::view-transition {
+  perspective: 1600px;
+}
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -399,21 +455,33 @@ body.layout-closing .nav-btn.is-disabled {
 }
 
 ::view-transition-old(root) {
-  animation: page-fade-out 0.35s ease forwards;
+  transform-origin: left center;
+  animation: page-flip-out 0.5s cubic-bezier(0.45, 0, 0.55, 1) forwards;
 }
 
 ::view-transition-new(root) {
-  animation: page-fade-in 0.35s ease forwards;
+  transform-origin: right center;
+  animation: page-flip-in 0.5s cubic-bezier(0.45, 0, 0.55, 1) forwards;
 }
 
-@keyframes page-fade-out {
+@keyframes page-flip-out {
+  from {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
   to {
+    transform: rotateY(-90deg);
     opacity: 0;
   }
 }
 
-@keyframes page-fade-in {
+@keyframes page-flip-in {
   from {
+    transform: rotateY(90deg);
     opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
   }
 }

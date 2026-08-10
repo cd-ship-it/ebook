@@ -7,6 +7,6 @@ backgroundImage: "https://images.unsplash.com/photo-1745919687203-522a1591961e?w
 imageAlt: "Three children walking along a dirt path in rural Cambodia"
 ---
 
-A ministry bringing shelter, schooling, and hope to underprivileged children across rural Cambodia.
+With grateful hearts, we walk alongside Cambodia's children — bringing shelter, schooling, and hope to the ones the world so often overlooks.
 
-*Tap "Next" to begin reading.*
+*Tap "Next" to begin reading with us.*

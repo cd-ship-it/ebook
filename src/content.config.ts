@@ -7,11 +7,12 @@ const pages = defineCollection({
     order: z.number(),
     title: z.string(),
     subtitle: z.string().optional(),
-    layout: z.enum(['cover', 'content', 'fullImage', 'video', 'closing']),
+    layout: z.enum(['cover', 'content', 'fullImage', 'video', 'closing', 'article']),
     backgroundImage: z.string().optional(),
     heroImage: z.string().optional(),
     imageAlt: z.string().optional(),
     youtubeId: z.string().optional(),
+    summary: z.string().optional(),
     externalLink: z
       .object({
         label: z.string(),

@@ -12,6 +12,6 @@ externalLinks:
     url: "https://example.org/volunteer"
 ---
 
-Placeholder call-to-action copy: a sentence or two on what a gift of $25, $50, or $100 provides — a week of meals, a term of school fees, a new mattress.
+We are deeply grateful for every person who chooses to stand with these children — a gift of $25, $50, or $100 can provide a week of meals, a term of school fees, or a child's first real mattress.
 
-Replace the two placeholder URLs above with your real donation and volunteer sign-up pages.
+*Placeholder copy — replace the two URLs above with your real donation and volunteer sign-up pages whenever they're ready.*

@@ -5,7 +5,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 const entry = await getEntry('pages', 'page-7');
 if (!entry) throw new Error('Missing content entry: page-7');
 const { Content } = await render(entry);
-const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId, externalLink, externalLinks, order } = entry.data;
+const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId, externalLink, externalLinks, order, summary } = entry.data;
 ---
 
 <PageLayout
@@ -16,6 +16,7 @@ const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId
   heroImage={heroImage}
   imageAlt={imageAlt}
   youtubeId={youtubeId}
+  summary={summary}
   externalLink={externalLink}
   externalLinks={externalLinks}
   order={order}

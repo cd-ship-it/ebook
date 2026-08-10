@@ -8,8 +8,8 @@ externalLink:
   url: "https://example.org/fung-wing-du-fung-yu"
 ---
 
-"No child should face the storms of poverty alone. We exist so that every child in our care can flourish — in body, in mind, and in spirit."
+"No child should face the storms of poverty alone. We give thanks that we get to stand in the gap — so that every child in our care can flourish in body, in mind, and in spirit."
 
-This page has no photo — leaving `backgroundImage` out of the frontmatter makes it fall back to the purple theme gradient, which reads well as a bold mission/quote page.
+We are thankful every single day for the hands and hearts that make this work possible — for the volunteers who show up, the donors who give quietly, and every ounce of grace that has carried us through the storms so far.
 
-Placeholder copy: replace this text in `src/content/pages/page-3.md` with the real mission narrative whenever it's ready.
+*Placeholder copy — replace this text in `src/content/pages/page-3.md` with your real mission narrative whenever it's ready.*
