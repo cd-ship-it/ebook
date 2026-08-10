@@ -62,7 +62,7 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
     <ClientRouter />
   </head>
   <body class={`layout-${layout}`}>
-    <main class="page-shell">
+    <main class="page-shell" data-prev-href={prevHref} data-next-href={nextHref}>
       {isFullBleed && (
         <div
           class="page-bg"
@@ -119,5 +119,52 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
         <NavControls prevHref={prevHref} nextHref={nextHref} current={order} total={TOTAL_PAGES} isLast={isLast} />
       </div>
     </main>
+
+    <script>
+      import { navigate } from 'astro:transitions/client';
+
+      function setupSwipeNav() {
+        const shell = document.querySelector('.page-shell');
+        if (!(shell instanceof HTMLElement)) return;
+
+        const SWIPE_THRESHOLD = 60;
+        let startX = 0;
+        let startY = 0;
+
+        shell.addEventListener(
+          'touchstart',
+          (e) => {
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+          },
+          { passive: true }
+        );
+
+        shell.addEventListener(
+          'touchend',
+          (e) => {
+            const touch = e.changedTouches[0];
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+
+            if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+
+            const nextHref = shell.dataset.nextHref;
+            const prevHref = shell.dataset.prevHref;
+
+            if (dx < 0 && nextHref) {
+              navigate(nextHref);
+            } else if (dx > 0 && prevHref) {
+              navigate(prevHref);
+            }
+          },
+          { passive: true }
+        );
+      }
+
+      setupSwipeNav();
+      document.addEventListener('astro:page-load', setupSwipeNav);
+    </script>
   </body>
 </html>

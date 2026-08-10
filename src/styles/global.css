@@ -56,6 +56,7 @@ img {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  touch-action: pan-y;
 }
 
 .page-bg {
