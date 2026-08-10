@@ -1,0 +1,10 @@
+---
+interface Props {
+  label: string;
+  url: string;
+}
+
+const { label, url } = Astro.props;
+---
+
+<a class="btn-link" href={url} target="_blank" rel="noopener noreferrer">{label}</a>

@@ -1,0 +1,123 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import NavControls from '../components/NavControls.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+
+interface LinkItem {
+  label: string;
+  url: string;
+}
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  layout: 'cover' | 'content' | 'fullImage' | 'video' | 'closing';
+  backgroundImage?: string;
+  heroImage?: string;
+  imageAlt?: string;
+  youtubeId?: string;
+  externalLink?: LinkItem;
+  externalLinks?: LinkItem[];
+  order: number;
+}
+
+const TOTAL_PAGES = 8;
+
+const {
+  title,
+  subtitle,
+  layout,
+  backgroundImage,
+  heroImage,
+  imageAlt,
+  youtubeId,
+  externalLink,
+  externalLinks,
+  order,
+} = Astro.props;
+
+const isFirst = order === 1;
+const isLast = order === TOTAL_PAGES;
+const prevHref = isFirst ? undefined : `/page${order - 1}.html`;
+const nextHref = isLast ? '/page1.html' : `/page${order + 1}.html`;
+const isFullBleed = layout === 'cover' || layout === 'fullImage' || layout === 'closing';
+const BOOK_NAME = '豐榮渡風雨';
+const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="豐榮渡風雨 — a ministry for underprivileged children in Cambodia." />
+    <title>{pageTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+TC:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+  </head>
+  <body class={`layout-${layout}`}>
+    <main class="page-shell">
+      {isFullBleed && (
+        <div
+          class="page-bg"
+          style={backgroundImage ? `background-image: url(${backgroundImage});` : undefined}
+          role="img"
+          aria-label={imageAlt}
+        ></div>
+      )}
+      {isFullBleed && <div class="page-overlay"></div>}
+
+      <div class="page-decor" aria-hidden="true">
+        <span class="decor-blob"></span>
+        <span class="decor-strip"></span>
+      </div>
+
+      <div class="page-content">
+        <header class={isFullBleed ? 'page-header title-plate' : 'page-header'}>
+          <h1>{title}</h1>
+          {subtitle && <p class="subtitle">{subtitle}</p>}
+        </header>
+
+        <div class="page-body">
+          {!isFullBleed && heroImage && (
+            <img
+              class="hero-image"
+              src={heroImage}
+              alt={imageAlt || ''}
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+          )}
+
+          {layout === 'video' && youtubeId && <YouTubeEmbed id={youtubeId} title={title} />}
+
+          <div class="prose">
+            <slot />
+          </div>
+
+          {externalLink && (
+            <div class="link-row">
+              <ExternalLink label={externalLink.label} url={externalLink.url} />
+            </div>
+          )}
+
+          {externalLinks && externalLinks.length > 0 && (
+            <div class="link-row">
+              {externalLinks.map((link) => (
+                <ExternalLink label={link.label} url={link.url} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <NavControls prevHref={prevHref} nextHref={nextHref} current={order} total={TOTAL_PAGES} isLast={isLast} />
+      </div>
+    </main>
+  </body>
+</html>
