@@ -62,6 +62,19 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
     <ClientRouter />
   </head>
   <body class={`layout-${layout}`}>
+    {prevHref ? (
+      <a class="side-nav side-nav-prev" href={prevHref} aria-label="Previous page">
+        <span>‹ Prev</span>
+      </a>
+    ) : (
+      <span class="side-nav side-nav-prev is-disabled" aria-hidden="true">
+        <span>‹ Prev</span>
+      </span>
+    )}
+    <a class="side-nav side-nav-next" href={nextHref} aria-label={isLast ? 'Restart' : 'Next page'}>
+      <span>{isLast ? 'Restart' : 'Next ›'}</span>
+    </a>
+
     <main class="page-shell" data-prev-href={prevHref} data-next-href={nextHref}>
       {isFullBleed && (
         <div
