@@ -1,15 +1,18 @@
 ---
 export const prerender = true;
+import { pageHref } from '../utils/paths';
+
+const startPage = pageHref(1);
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=/page1.html" />
-    <link rel="canonical" href="/page1.html" />
+    <meta http-equiv="refresh" content={`0; url=${startPage}`} />
+    <link rel="canonical" href={startPage} />
     <title>豐榮渡風雨</title>
   </head>
   <body>
-    <p>Redirecting to <a href="/page1.html">the book</a>&hellip;</p>
+    <p>Redirecting to <a href={startPage}>the book</a>&hellip;</p>
   </body>
 </html>

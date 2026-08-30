@@ -4,6 +4,7 @@ import '../styles/global.css';
 import NavControls from '../components/NavControls.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+import { pageHref } from '../utils/paths';
 
 interface LinkItem {
   label: string;
@@ -42,8 +43,8 @@ const {
 
 const isFirst = order === 1;
 const isLast = order === TOTAL_PAGES;
-const prevHref = isFirst ? undefined : `/page${order - 1}.html`;
-const nextHref = isLast ? '/page1.html' : `/page${order + 1}.html`;
+const prevHref = isFirst ? undefined : pageHref(order - 1);
+const nextHref = isLast ? pageHref(1) : pageHref(order + 1);
 const isFullBleed = layout === 'cover' || layout === 'fullImage' || layout === 'closing';
 const BOOK_NAME = '豐榮渡風雨';
 const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
