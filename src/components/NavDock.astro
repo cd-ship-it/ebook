@@ -1,0 +1,43 @@
+---
+interface Props {
+  prevHref?: string;
+  nextHref: string;
+  current: number;
+  total: number;
+  isLast: boolean;
+}
+
+const { prevHref, nextHref, current, total, isLast } = Astro.props;
+---
+
+<nav class="nav-dock" aria-label="Page navigation">
+  <div class="nav-dock-glass">
+    {
+      prevHref ? (
+        <a class="nav-dock-btn" href={prevHref} aria-label="Previous page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      ) : (
+        <span class="nav-dock-btn is-disabled" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      )
+    }
+
+    <span class="nav-dock-indicator" aria-live="polite">
+      <span class="nav-dock-current">{current}</span>
+      <span class="nav-dock-sep">/</span>
+      <span class="nav-dock-total">{total}</span>
+    </span>
+
+    <a class="nav-dock-btn" href={nextHref} aria-label={isLast ? 'Restart from first page' : 'Next page'}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+  </div>
+</nav>

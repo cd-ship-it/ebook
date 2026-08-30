@@ -1,9 +1,10 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
-import NavControls from '../components/NavControls.astro';
+import NavDock from '../components/NavDock.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+import { cacheBustUrl } from '../utils/cacheBust';
 import { pageHref } from '../utils/paths';
 
 interface LinkItem {
@@ -48,6 +49,11 @@ const nextHref = isLast ? pageHref(1) : pageHref(order + 1);
 const isFullBleed = layout === 'cover' || layout === 'fullImage' || layout === 'closing';
 const BOOK_NAME = '豐榮渡風雨';
 const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
+const bustedBackgroundImage = backgroundImage ? cacheBustUrl(backgroundImage) : undefined;
+const bustedHeroImage = heroImage ? cacheBustUrl(heroImage) : undefined;
+const fontStylesheet = cacheBustUrl(
+  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+TC:wght@400;600;700&display=swap'
+);
 ---
 
 <html lang="en">
@@ -58,31 +64,15 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
     <title>{pageTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+TC:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href={fontStylesheet} rel="stylesheet" />
     <ClientRouter />
   </head>
   <body class={`layout-${layout}`}>
-    {prevHref ? (
-      <a class="side-nav side-nav-prev" href={prevHref} aria-label="Previous page">
-        <span>‹ Prev</span>
-      </a>
-    ) : (
-      <span class="side-nav side-nav-prev is-disabled" aria-hidden="true">
-        <span>‹ Prev</span>
-      </span>
-    )}
-    <a class="side-nav side-nav-next" href={nextHref} aria-label={isLast ? 'Restart' : 'Next page'}>
-      <span>{isLast ? 'Restart' : 'Next ›'}</span>
-    </a>
-
     <main class="page-shell" data-prev-href={prevHref} data-next-href={nextHref}>
       {isFullBleed && (
         <div
           class="page-bg"
-          style={backgroundImage ? `background-image: url(${backgroundImage});` : undefined}
+          style={bustedBackgroundImage ? `background-image: url(${bustedBackgroundImage});` : undefined}
           role="img"
           aria-label={imageAlt}
         ></div>
@@ -104,7 +94,7 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
           {heroImage && (
             <img
               class="hero-image"
-              src={heroImage}
+              src={bustedHeroImage}
               alt={imageAlt || ''}
               loading="lazy"
               onerror="this.style.display='none'"
@@ -151,10 +141,10 @@ const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
             </div>
           )}
         </div>
-
-        <NavControls prevHref={prevHref} nextHref={nextHref} current={order} total={TOTAL_PAGES} isLast={isLast} />
       </div>
     </main>
+
+    <NavDock prevHref={prevHref} nextHref={nextHref} current={order} total={TOTAL_PAGES} isLast={isLast} />
 
     <script>
       import { navigate } from 'astro:transitions/client';
