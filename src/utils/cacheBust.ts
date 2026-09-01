@@ -1,4 +1,4 @@
-const ASSET_PATTERN = /\.(css|js|mjs|png|jpe?g|gif|webp|svg|ico)(\?|#|$)/i;
+const ASSET_PATTERN = /\.(css|js|mjs|png|jpe?g|gif|webp|svg|ico|mp4|webm)(\?|#|$)/i;
 
 function getToken(): string {
   return import.meta.env.PUBLIC_CACHE_BUST ?? 'dev';
@@ -8,6 +8,9 @@ export function shouldCacheBust(url: string): boolean {
   if (!url || url.startsWith('data:') || url.startsWith('#') || url.startsWith('mailto:')) {
     return false;
   }
+  if (/[?&]=/.test(url)) {
+    return false;
+  }
   if (/youtube\.com|youtu\.be|youtube-nocookie/i.test(url)) {
     return false;
   }
@@ -15,7 +18,8 @@ export function shouldCacheBust(url: string): boolean {
     ASSET_PATTERN.test(url) ||
     url.includes('/_astro/') ||
     (url.includes('fonts.googleapis.com') && url.includes('/css')) ||
-    url.includes('images.unsplash.com')
+    url.includes('images.unsplash.com') ||
+    url.includes('placehold.co')
   );
 }
 

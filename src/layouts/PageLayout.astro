@@ -3,9 +3,12 @@ import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import NavDock from '../components/NavDock.astro';
 import ExternalLink from '../components/ExternalLink.astro';
+import ReadMoreDialog from '../components/ReadMoreDialog.astro';
+import MarkdownBlocks from '../components/MarkdownBlocks.astro';
 import YouTubeEmbed from '../components/YouTubeEmbed.astro';
 import { cacheBustUrl } from '../utils/cacheBust';
 import { pageHref } from '../utils/paths';
+import type { MarkdownBlock } from '../utils/parseMarkdownBlocks';
 
 interface LinkItem {
   label: string;
@@ -15,7 +18,12 @@ interface LinkItem {
 interface Props {
   title: string;
   subtitle?: string;
-  layout: 'cover' | 'content' | 'fullImage' | 'video' | 'closing' | 'article';
+  layout: 'cover' | 'content' | 'fullImage' | 'video' | 'closing' | 'article' | 'landing';
+  bookTitle?: string;
+  ctaLabel?: string;
+  backgroundVideo?: string;
+  readMoreLabel?: string;
+  readMoreBlocks?: MarkdownBlock[];
   backgroundImage?: string;
   heroImage?: string;
   imageAlt?: string;
@@ -40,6 +48,11 @@ const {
   externalLink,
   externalLinks,
   order,
+  bookTitle,
+  ctaLabel,
+  backgroundVideo,
+  readMoreLabel,
+  readMoreBlocks,
 } = Astro.props;
 
 const isFirst = order === 1;
@@ -47,6 +60,23 @@ const isLast = order === TOTAL_PAGES;
 const prevHref = isFirst ? undefined : pageHref(order - 1);
 const nextHref = isLast ? pageHref(1) : pageHref(order + 1);
 const isFullBleed = layout === 'cover' || layout === 'fullImage' || layout === 'closing';
+const isLanding = layout === 'landing';
+const landingTitleLine2 = subtitle?.startsWith('與述說')
+  ? {
+      connector: '與',
+      heading: '述說',
+      detail: subtitle.slice('與述說'.length).trimStart(),
+    }
+  : subtitle
+    ? { connector: '', heading: '', detail: subtitle }
+    : null;
+const landingCtaLabel = ctaLabel ?? '開始閱讀 →';
+const publicAsset = (path: string) => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${normalized}`.replace(/\/+/g, '/');
+};
+const bustedBackgroundVideo = backgroundVideo ? cacheBustUrl(publicAsset(backgroundVideo)) : undefined;
 const BOOK_NAME = '豐榮渡風雨';
 const pageTitle = title === BOOK_NAME ? title : `${title} — ${BOOK_NAME}`;
 const bustedBackgroundImage = backgroundImage ? cacheBustUrl(backgroundImage) : undefined;
@@ -79,69 +109,127 @@ const fontStylesheet = cacheBustUrl(
       )}
       {isFullBleed && <div class="page-overlay"></div>}
 
-      <div class="page-decor" aria-hidden="true">
-        <span class="decor-blob"></span>
-        <span class="decor-strip"></span>
-      </div>
-
-      <div class="page-content">
-        <header class={isFullBleed ? 'page-header title-plate' : 'page-header'}>
-          <h1>{title}</h1>
-          {subtitle && <p class="subtitle">{subtitle}</p>}
-        </header>
-
-        <div class="page-body">
-          {heroImage && (
-            <img
-              class="hero-image"
-              src={bustedHeroImage}
-              alt={imageAlt || ''}
-              loading="lazy"
-              onerror="this.style.display='none'"
-            />
-          )}
-
-          {layout === 'video' && youtubeId && <YouTubeEmbed id={youtubeId} title={title} />}
-
-          {layout === 'article' ? (
-            <>
-              {summary && <p class="summary-text">{summary}</p>}
-              <button
-                type="button"
-                class="read-more-btn"
-                data-read-more
-                aria-expanded="false"
-                aria-controls={`article-collapse-${order}`}
-              >
-                Read more ↓
-              </button>
-              <div class="reveal-collapse" id={`article-collapse-${order}`}>
-                <div class="reveal-inner prose">
-                  <slot />
-                </div>
-              </div>
-            </>
-          ) : (
-            <div class="prose">
-              <slot />
-            </div>
-          )}
-
-          {externalLink && (
-            <div class="link-row">
-              <ExternalLink label={externalLink.label} url={externalLink.url} />
-            </div>
-          )}
-
-          {externalLinks && externalLinks.length > 0 && (
-            <div class="link-row">
-              {externalLinks.map((link) => (
-                <ExternalLink label={link.label} url={link.url} />
-              ))}
-            </div>
-          )}
+      {!isLanding && (
+        <div class="page-decor" aria-hidden="true">
+          <span class="decor-blob"></span>
+          <span class="decor-strip"></span>
         </div>
-      </div>
+      )}
+
+      {isLanding && bustedBackgroundVideo && (
+        <div class="landing-hero-bg" aria-hidden="true">
+          <video
+            class="landing-hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src={bustedBackgroundVideo} type="video/mp4" />
+          </video>
+        </div>
+      )}
+
+      {isLanding ? (
+        <div class="landing-layout">
+          <div class="landing-content">
+            <div class="landing-text">
+              <header class="landing-header">
+                <h1 class="landing-title-line1">{title}</h1>
+                {landingTitleLine2 && (
+                  <p class="landing-title-line2">
+                    {landingTitleLine2.connector && (
+                      <span class="landing-title-connector">{landingTitleLine2.connector}</span>
+                    )}
+                    {landingTitleLine2.heading && (
+                      <span class="landing-title-heading">{landingTitleLine2.heading}</span>
+                    )}
+                    {landingTitleLine2.detail && (
+                      <span class="landing-title-detail">{landingTitleLine2.detail}</span>
+                    )}
+                  </p>
+                )}
+              </header>
+              <div class="landing-details prose">
+                <slot />
+              </div>
+              {readMoreBlocks && readMoreBlocks.length > 0 && (
+                <div class="landing-read-more">
+                  <ReadMoreDialog id={`read-more-${order}`} label={readMoreLabel ?? 'Read More'}>
+                    <MarkdownBlocks blocks={readMoreBlocks} />
+                  </ReadMoreDialog>
+                </div>
+              )}
+              {bookTitle && <p class="landing-book-title">{bookTitle}</p>}
+              {nextHref && (
+                <div class="landing-actions link-row">
+                  <a class="btn-link" href={nextHref}>{landingCtaLabel}</a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div class="page-content">
+          <header class={isFullBleed ? 'page-header title-plate' : 'page-header'}>
+            <h1>{title}</h1>
+            {subtitle && <p class="subtitle">{subtitle}</p>}
+          </header>
+
+          <div class="page-body">
+            {heroImage && (
+              <img
+                class="hero-image"
+                src={bustedHeroImage}
+                alt={imageAlt || ''}
+                loading="lazy"
+                onerror="this.style.display='none'"
+              />
+            )}
+
+            {layout === 'video' && youtubeId && <YouTubeEmbed id={youtubeId} title={title} />}
+
+            {layout === 'article' ? (
+              <>
+                {summary && <p class="summary-text">{summary}</p>}
+                <button
+                  type="button"
+                  class="read-more-btn"
+                  data-read-more
+                  aria-expanded="false"
+                  aria-controls={`article-collapse-${order}`}
+                >
+                  Read more ↓
+                </button>
+                <div class="reveal-collapse" id={`article-collapse-${order}`}>
+                  <div class="reveal-inner prose">
+                    <slot />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div class="prose">
+                <slot />
+              </div>
+            )}
+
+            {externalLink && (
+              <div class="link-row">
+                <ExternalLink label={externalLink.label} url={externalLink.url} />
+              </div>
+            )}
+
+            {externalLinks && externalLinks.length > 0 && (
+              <div class="link-row">
+                {externalLinks.map((link) => (
+                  <ExternalLink label={link.label} url={link.url} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </main>
 
     <NavDock prevHref={prevHref} nextHref={nextHref} current={order} total={TOTAL_PAGES} isLast={isLast} />
@@ -206,8 +294,65 @@ const fontStylesheet = cacheBustUrl(
 
       setupSwipeNav();
       setupReadMore();
+      setupLandingVideo();
+      setupReadMoreDialog();
       document.addEventListener('astro:page-load', setupSwipeNav);
       document.addEventListener('astro:page-load', setupReadMore);
+      document.addEventListener('astro:page-load', setupLandingVideo);
+      document.addEventListener('astro:page-load', setupReadMoreDialog);
+
+      function setupReadMoreDialog() {
+        if (document.documentElement.dataset.readMoreDialogReady) return;
+        document.documentElement.dataset.readMoreDialogReady = 'true';
+
+        document.addEventListener('click', (e) => {
+          const target = e.target;
+          if (!(target instanceof Element)) return;
+
+          const openBtn = target.closest('[data-read-more-open]');
+          if (openBtn instanceof HTMLElement) {
+            const id = openBtn.getAttribute('data-read-more-open');
+            const dialog = id ? document.getElementById(id) : null;
+            if (dialog instanceof HTMLDialogElement) {
+              dialog.showModal();
+              activateDialogVideos(dialog);
+            }
+            return;
+          }
+
+          const closeBtn = target.closest('[data-read-more-close]');
+          if (closeBtn instanceof HTMLElement) {
+            const id = closeBtn.getAttribute('data-read-more-close');
+            const dialog = id ? document.getElementById(id) : null;
+            if (dialog instanceof HTMLDialogElement) dialog.close();
+            return;
+          }
+
+          if (target instanceof HTMLDialogElement && target.classList.contains('read-more-dialog')) {
+            target.close();
+          }
+        });
+      }
+
+      function activateDialogVideos(dialog: HTMLDialogElement) {
+        dialog.querySelectorAll('.video-wrapper iframe').forEach((iframe) => {
+          if (!(iframe instanceof HTMLIFrameElement)) return;
+          const src = iframe.getAttribute('src');
+          if (!src) return;
+          iframe.src = '';
+          iframe.src = src;
+        });
+      }
+
+      function setupLandingVideo() {
+        document.querySelectorAll('.landing-hero-video').forEach((video) => {
+          if (!(video instanceof HTMLVideoElement)) return;
+          video.muted = true;
+          const play = () => video.play().catch(() => {});
+          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) play();
+          else video.addEventListener('loadeddata', play, { once: true });
+        });
+      }
     </script>
   </body>
 </html>

@@ -1,0 +1,58 @@
+---
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import type { MarkdownBlock } from '../utils/parseMarkdownBlocks';
+import { resolveImageSrc } from '../utils/parseMarkdownBlocks';
+
+interface Props {
+  blocks: MarkdownBlock[];
+}
+
+const { blocks } = Astro.props;
+---
+
+{
+  blocks.map((block) => {
+    if (block.type === 'heading') {
+      return block.level === 2 ? (
+        <h2 class="markdown-heading">{block.text}</h2>
+      ) : (
+        <h3 class="markdown-subheading">{block.text}</h3>
+      );
+    }
+
+    if (block.type === 'paragraph') {
+      return (
+        <p>
+          {block.lines.map((line, index) => (
+            <>
+              {index > 0 && <br />}
+              {line}
+            </>
+          ))}
+        </p>
+      );
+    }
+
+    if (block.type === 'image') {
+      return (
+        <img
+          class="content-image"
+          src={resolveImageSrc(block.src)}
+          alt={block.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      );
+    }
+
+    if (block.type === 'youtube') {
+      return (
+        <div class="content-video">
+          <YouTubeEmbed id={block.videoId} title={block.title} />
+        </div>
+      );
+    }
+
+    return null;
+  })
+}

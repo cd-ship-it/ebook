@@ -1,25 +1,21 @@
 ---
-import { getEntry, render } from 'astro:content';
-import PageLayout from '../layouts/PageLayout.astro';
+export const prerender = true;
+import { pageHref } from '../utils/paths';
 
-const entry = await getEntry('pages', 'page-1');
-if (!entry) throw new Error('Missing content entry: page-1');
-const { Content } = await render(entry);
-const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId, externalLink, externalLinks, order, summary } = entry.data;
+const homePage = pageHref(1);
 ---
 
-<PageLayout
-  title={title}
-  subtitle={subtitle}
-  layout={layout}
-  backgroundImage={backgroundImage}
-  heroImage={heroImage}
-  imageAlt={imageAlt}
-  youtubeId={youtubeId}
-  summary={summary}
-  externalLink={externalLink}
-  externalLinks={externalLinks}
-  order={order}
->
-  <Content />
-</PageLayout>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${homePage}`} />
+    <link rel="canonical" href={homePage} />
+    <title>豐榮渡風雨</title>
+    <script is:inline define:vars={{ homePage }}>
+      window.location.replace(homePage);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href={homePage}>the book</a>&hellip;</p>
+  </body>
+</html>

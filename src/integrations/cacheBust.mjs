@@ -3,10 +3,13 @@ import { glob } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ASSET_PATTERN = /\.(css|js|mjs|png|jpe?g|gif|webp|svg|ico)(\?|#|$)/i;
+const ASSET_PATTERN = /\.(css|js|mjs|png|jpe?g|gif|webp|svg|ico|mp4|webm)(\?|#|$)/i;
 
 function shouldCacheBust(url) {
   if (!url || url.startsWith('data:') || url.startsWith('#') || url.startsWith('mailto:')) {
+    return false;
+  }
+  if (/[?&]=/.test(url)) {
     return false;
   }
   if (/youtube\.com|youtu\.be|youtube-nocookie/i.test(url)) {
@@ -16,7 +19,8 @@ function shouldCacheBust(url) {
     ASSET_PATTERN.test(url) ||
     url.includes('/_astro/') ||
     (url.includes('fonts.googleapis.com') && url.includes('/css')) ||
-    url.includes('images.unsplash.com')
+    url.includes('images.unsplash.com') ||
+    url.includes('placehold.co')
   );
 }
 

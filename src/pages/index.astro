@@ -1,11 +1,35 @@
 ---
-import { getEntry, render } from 'astro:content';
+import { getEntry } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
+import MarkdownBlocks from '../components/MarkdownBlocks.astro';
+import { parseMarkdownBlocks } from '../utils/parseMarkdownBlocks';
+import { splitPageMarkdown } from '../utils/pageMarkdown';
 
 const entry = await getEntry('pages', 'page-1');
 if (!entry) throw new Error('Missing content entry: page-1');
-const { Content } = await render(entry);
-const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId, externalLink, externalLinks, order, summary } = entry.data;
+
+const { main, details } = splitPageMarkdown(entry.body ?? '');
+
+const {
+  title,
+  subtitle,
+  layout,
+  backgroundImage,
+  heroImage,
+  imageAlt,
+  youtubeId,
+  externalLink,
+  externalLinks,
+  order,
+  summary,
+  bookTitle,
+  ctaLabel,
+  backgroundVideo,
+  readMoreLabel,
+} = entry.data;
+
+const mainBlocks = parseMarkdownBlocks(main);
+const readMoreBlocks = details ? parseMarkdownBlocks(details) : [];
 ---
 
 <PageLayout
@@ -20,6 +44,11 @@ const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId
   externalLink={externalLink}
   externalLinks={externalLinks}
   order={order}
+  bookTitle={bookTitle}
+  ctaLabel={ctaLabel}
+  backgroundVideo={backgroundVideo}
+  readMoreLabel={readMoreLabel}
+  readMoreBlocks={readMoreBlocks}
 >
-  <Content />
+  <MarkdownBlocks blocks={mainBlocks} />
 </PageLayout>

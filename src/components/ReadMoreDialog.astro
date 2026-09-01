@@ -1,0 +1,28 @@
+---
+interface Props {
+  id: string;
+  label: string;
+}
+
+const { id, label } = Astro.props;
+---
+
+<button type="button" class="read-more-btn" data-read-more-open={id} aria-haspopup="dialog">
+  {label}
+</button>
+
+<dialog class="read-more-dialog" id={id} aria-labelledby={`${id}-title`}>
+  <div class="read-more-dialog-panel">
+    <button
+      type="button"
+      class="read-more-dialog-close"
+      data-read-more-close={id}
+      aria-label="Close"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+    <div class="read-more-dialog-body prose" id={`${id}-title`}>
+      <slot />
+    </div>
+  </div>
+</dialog>
