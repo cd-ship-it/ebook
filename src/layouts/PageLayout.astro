@@ -124,7 +124,8 @@ const fontStylesheet = cacheBustUrl(
             muted
             loop
             playsinline
-            preload="metadata"
+            preload="auto"
+            disablepictureinpicture
           >
             <source src={bustedBackgroundVideo} type="video/mp4" />
           </video>
@@ -295,10 +296,12 @@ const fontStylesheet = cacheBustUrl(
       setupSwipeNav();
       setupReadMore();
       setupLandingVideo();
+      setupLandingVideoResume();
       setupReadMoreDialog();
       document.addEventListener('astro:page-load', setupSwipeNav);
       document.addEventListener('astro:page-load', setupReadMore);
       document.addEventListener('astro:page-load', setupLandingVideo);
+      document.addEventListener('astro:page-load', setupLandingVideoResume);
       document.addEventListener('astro:page-load', setupReadMoreDialog);
 
       function setupReadMoreDialog() {
@@ -347,11 +350,36 @@ const fontStylesheet = cacheBustUrl(
       function setupLandingVideo() {
         document.querySelectorAll('.landing-hero-video').forEach((video) => {
           if (!(video instanceof HTMLVideoElement)) return;
+
           video.muted = true;
-          const play = () => video.play().catch(() => {});
-          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) play();
-          else video.addEventListener('loadeddata', play, { once: true });
+          video.defaultMuted = true;
+          video.setAttribute('muted', '');
+          video.setAttribute('playsinline', '');
+          video.setAttribute('webkit-playsinline', '');
+
+          const play = () => {
+            video.muted = true;
+            video.play().catch(() => {});
+          };
+
+          play();
+
+          if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+            video.addEventListener('loadeddata', play, { once: true });
+            video.addEventListener('canplay', play, { once: true });
+          }
         });
+      }
+
+      function setupLandingVideoResume() {
+        const resume = () => setupLandingVideo();
+
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') resume();
+        });
+
+        window.addEventListener('pageshow', resume);
+        document.addEventListener('touchstart', resume, { once: true, passive: true });
       }
     </script>
   </body>

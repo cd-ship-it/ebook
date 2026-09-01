@@ -624,10 +624,16 @@ body.layout-landing .page-shell {
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: top right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-hero-video {
+    animation: none;
+  }
 }
 
 .landing-layout {
@@ -720,16 +726,17 @@ body.layout-landing .page-shell {
   justify-content: center;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .landing-hero-video {
-    display: none;
-  }
-}
-
 @media (max-width: 720px) {
   .landing-layout {
     padding-left: max(6vw, 1.5rem);
     padding-right: max(6vw, 1.5rem);
+  }
+
+  .landing-hero-video {
+    width: 100%;
+    height: min(55vh, 480px);
+    object-fit: contain;
+    object-position: top right;
   }
 
   .landing-hero-bg::after {
