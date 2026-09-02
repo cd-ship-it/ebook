@@ -1,14 +1,40 @@
 ---
 import MarkdownBlocks from './MarkdownBlocks.astro';
+import ReadMoreDialog from './ReadMoreDialog.astro';
 import { parseMarkdownBlocks } from '../utils/parseMarkdownBlocks';
+import { parsePageSegments } from '../utils/pageMarkdown';
 
 interface Props {
   body: string;
   pageOrder: number;
+  readMoreLabel?: string;
 }
 
-const { body, pageOrder } = Astro.props;
-const blocks = parseMarkdownBlocks(body ?? '', pageOrder);
+const { body, pageOrder, readMoreLabel } = Astro.props;
+const segments = parsePageSegments(body ?? '');
 ---
 
-<MarkdownBlocks blocks={blocks} pageOrder={pageOrder} />
+{
+  segments.map((segment) => {
+    if (segment.type === 'content') {
+      return (
+        <MarkdownBlocks
+          blocks={parseMarkdownBlocks(segment.markdown, pageOrder)}
+          pageOrder={pageOrder}
+        />
+      );
+    }
+
+    const detailsBlocks = parseMarkdownBlocks(segment.markdown, pageOrder);
+    if (detailsBlocks.length === 0) return null;
+
+    const dialogId = `read-more-${pageOrder}-${segment.index}`;
+    return (
+      <div class="page-read-more">
+        <ReadMoreDialog id={dialogId} label={readMoreLabel ?? 'Read More'}>
+          <MarkdownBlocks blocks={detailsBlocks} pageOrder={pageOrder} />
+        </ReadMoreDialog>
+      </div>
+    );
+  })
+}

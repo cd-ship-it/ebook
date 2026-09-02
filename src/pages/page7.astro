@@ -5,7 +5,7 @@ import PageContent from '../components/PageContent.astro';
 
 const entry = await getEntry('pages', 'page-7');
 if (!entry) throw new Error('Missing content entry: page-7');
-const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId, externalLink, externalLinks, order, summary } = entry.data;
+const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId, externalLink, externalLinks, order, summary, readMoreLabel } = entry.data;
 ---
 
 <PageLayout
@@ -21,5 +21,5 @@ const { title, subtitle, layout, backgroundImage, heroImage, imageAlt, youtubeId
   externalLinks={externalLinks}
   order={order}
 >
-  <PageContent body={entry.body ?? ''} pageOrder={order} />
+  <PageContent body={entry.body ?? ''} pageOrder={order} readMoreLabel={readMoreLabel} />
 </PageLayout>

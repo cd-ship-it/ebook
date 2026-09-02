@@ -557,6 +557,14 @@ body.layout-video .subtitle {
   margin-bottom: 2rem;
 }
 
+.page-read-more {
+  margin-top: 1.5rem;
+}
+
+.landing-details .page-read-more {
+  margin-bottom: 2rem;
+}
+
 /* ---------- photo collage + lightbox ---------- */
 
 .photo-collage {

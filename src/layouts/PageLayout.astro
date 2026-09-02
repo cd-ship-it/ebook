@@ -3,12 +3,9 @@ import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import NavDock from '../components/NavDock.astro';
 import ExternalLink from '../components/ExternalLink.astro';
-import ReadMoreDialog from '../components/ReadMoreDialog.astro';
-import MarkdownBlocks from '../components/MarkdownBlocks.astro';
 import YouTubeEmbed from '../components/YouTubeEmbed.astro';
 import { cacheBustUrl } from '../utils/cacheBust';
 import { pageHref } from '../utils/paths';
-import type { MarkdownBlock } from '../utils/parseMarkdownBlocks';
 
 interface LinkItem {
   label: string;
@@ -22,8 +19,6 @@ interface Props {
   bookTitle?: string;
   ctaLabel?: string;
   backgroundVideo?: string;
-  readMoreLabel?: string;
-  readMoreBlocks?: MarkdownBlock[];
   backgroundImage?: string;
   heroImage?: string;
   imageAlt?: string;
@@ -51,8 +46,6 @@ const {
   bookTitle,
   ctaLabel,
   backgroundVideo,
-  readMoreLabel,
-  readMoreBlocks,
 } = Astro.props;
 
 const isFirst = order === 1;
@@ -155,13 +148,6 @@ const fontStylesheet = cacheBustUrl(
               <div class="landing-details prose">
                 <slot />
               </div>
-              {readMoreBlocks && readMoreBlocks.length > 0 && (
-                <div class="landing-read-more">
-                  <ReadMoreDialog id={`read-more-${order}`} label={readMoreLabel ?? 'Read More'}>
-                    <MarkdownBlocks blocks={readMoreBlocks} />
-                  </ReadMoreDialog>
-                </div>
-              )}
               {bookTitle && <p class="landing-book-title">{bookTitle}</p>}
               {nextHref && (
                 <div class="landing-actions link-row">
