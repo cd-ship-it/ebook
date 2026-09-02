@@ -1,0 +1,14 @@
+---
+import MarkdownBlocks from './MarkdownBlocks.astro';
+import { parseMarkdownBlocks } from '../utils/parseMarkdownBlocks';
+
+interface Props {
+  body: string;
+  pageOrder: number;
+}
+
+const { body, pageOrder } = Astro.props;
+const blocks = parseMarkdownBlocks(body ?? '', pageOrder);
+---
+
+<MarkdownBlocks blocks={blocks} pageOrder={pageOrder} />

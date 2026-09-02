@@ -28,8 +28,8 @@ const {
   readMoreLabel,
 } = entry.data;
 
-const mainBlocks = parseMarkdownBlocks(main);
-const readMoreBlocks = details ? parseMarkdownBlocks(details) : [];
+const mainBlocks = parseMarkdownBlocks(main, order);
+const readMoreBlocks = details ? parseMarkdownBlocks(details, order) : [];
 ---
 
 <PageLayout
@@ -50,5 +50,5 @@ const readMoreBlocks = details ? parseMarkdownBlocks(details) : [];
   readMoreLabel={readMoreLabel}
   readMoreBlocks={readMoreBlocks}
 >
-  <MarkdownBlocks blocks={mainBlocks} />
+  <MarkdownBlocks blocks={mainBlocks} pageOrder={order} />
 </PageLayout>

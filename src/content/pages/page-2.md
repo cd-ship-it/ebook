@@ -11,4 +11,6 @@ Thank you so much for opening this book — it means more to us than you know. M
 
 We're endlessly grateful for how far we've come since then. This placeholder paragraph stands in for the real story of how a small act of compassion grew into a home, a school, and a community that dozens of families now depend on.
 
+---photo_collage---
+
 *Replace this text in `src/content/pages/page-2.md` whenever you're ready to share your own story of gratitude.*

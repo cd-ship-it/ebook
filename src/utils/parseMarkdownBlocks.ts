@@ -1,4 +1,5 @@
 import { resolveContentAssetUrl } from './contentAsset';
+import { PAGE_PHOTO_COLLAGE_MARKER } from './pageMarkdown';
 import { extractYouTubeId } from './youtube';
 
 const IMAGE_MARKDOWN = /^!\[([^\]]*)\]\(([^)]+)\)$/;
@@ -11,9 +12,10 @@ export type MarkdownBlock =
   | { type: 'paragraph'; lines: string[] }
   | { type: 'heading'; level: 2 | 3; text: string }
   | { type: 'image'; src: string; alt: string }
-  | { type: 'youtube'; videoId: string; title: string };
+  | { type: 'youtube'; videoId: string; title: string }
+  | { type: 'photo_collage' };
 
-export function parseMarkdownBlocks(markdown: string): MarkdownBlock[] {
+export function parseMarkdownBlocks(markdown: string, _pageOrder?: number): MarkdownBlock[] {
   return markdown
     .trim()
     .split(/\n\n+/)
@@ -23,6 +25,10 @@ export function parseMarkdownBlocks(markdown: string): MarkdownBlock[] {
 
 function parseBlock(block: string): MarkdownBlock | null {
   if (!block) return null;
+
+  if (block === PAGE_PHOTO_COLLAGE_MARKER || block === 'photo_collage') {
+    return { type: 'photo_collage' };
+  }
 
   const imageMatch = block.match(IMAGE_MARKDOWN);
   if (imageMatch) {

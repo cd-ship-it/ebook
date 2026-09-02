@@ -1,13 +1,15 @@
 ---
 import YouTubeEmbed from './YouTubeEmbed.astro';
+import PhotoCollage from './PhotoCollage.astro';
 import type { MarkdownBlock } from '../utils/parseMarkdownBlocks';
 import { resolveImageSrc } from '../utils/parseMarkdownBlocks';
 
 interface Props {
   blocks: MarkdownBlock[];
+  pageOrder?: number;
 }
 
-const { blocks } = Astro.props;
+const { blocks, pageOrder = 0 } = Astro.props;
 ---
 
 {
@@ -51,6 +53,10 @@ const { blocks } = Astro.props;
           <YouTubeEmbed id={block.videoId} title={block.title} />
         </div>
       );
+    }
+
+    if (block.type === 'photo_collage') {
+      return <PhotoCollage pageOrder={pageOrder} />;
     }
 
     return null;

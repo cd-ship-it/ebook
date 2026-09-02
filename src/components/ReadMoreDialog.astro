@@ -1,4 +1,6 @@
 ---
+import ContentDialog from './ContentDialog.astro';
+
 interface Props {
   id: string;
   label: string;
@@ -11,18 +13,6 @@ const { id, label } = Astro.props;
   {label}
 </button>
 
-<dialog class="read-more-dialog" id={id} aria-labelledby={`${id}-title`}>
-  <div class="read-more-dialog-panel">
-    <button
-      type="button"
-      class="read-more-dialog-close"
-      data-read-more-close={id}
-      aria-label="Close"
-    >
-      <span aria-hidden="true">×</span>
-    </button>
-    <div class="read-more-dialog-body prose" id={`${id}-title`}>
-      <slot />
-    </div>
-  </div>
-</dialog>
+<ContentDialog id={id}>
+  <slot />
+</ContentDialog>

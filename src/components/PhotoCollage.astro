@@ -1,0 +1,39 @@
+---
+import ContentDialog from './ContentDialog.astro';
+import { resolveContentAssetUrl } from '../utils/contentAsset';
+import { getPagePhotoUrls } from '../utils/pagePhotos';
+
+interface Props {
+  pageOrder: number;
+}
+
+const { pageOrder } = Astro.props;
+const photos = getPagePhotoUrls(pageOrder);
+const idPrefix = `photo-collage-${pageOrder}`;
+---
+
+{
+  photos.length > 0 && (
+    <div class="photo-collage">
+      {photos.map((src, index) => {
+        const dialogId = `${idPrefix}-${index}`;
+        const resolved = resolveContentAssetUrl(src);
+        return (
+          <>
+            <button
+              type="button"
+              class="photo-collage-item"
+              data-read-more-open={dialogId}
+              aria-label={`View photo ${index + 1} of ${photos.length}`}
+            >
+              <img src={resolved} alt="" loading="lazy" decoding="async" />
+            </button>
+            <ContentDialog id={dialogId} class="photo-lightbox-dialog">
+              <img class="photo-lightbox-image" src={resolved} alt="" />
+            </ContentDialog>
+          </>
+        );
+      })}
+    </div>
+  )
+}

@@ -1,0 +1,26 @@
+---
+interface Props {
+  id: string;
+  labelledBy?: string;
+  class?: string;
+}
+
+const { id, labelledBy, class: className } = Astro.props;
+const bodyId = labelledBy ?? `${id}-title`;
+---
+
+<dialog class:list={['read-more-dialog', className]} id={id} aria-labelledby={bodyId}>
+  <div class="read-more-dialog-panel">
+    <button
+      type="button"
+      class="read-more-dialog-close"
+      data-read-more-close={id}
+      aria-label="Close"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+    <div class="read-more-dialog-body" id={bodyId}>
+      <slot />
+    </div>
+  </div>
+</dialog>
